@@ -5,25 +5,25 @@ class Func:
 
     def __init__(self, str):
         self.str = str.split(" ")
-        Func.a = Func.b = Func.c = float(0)
-        for st in str:
-            if "X^" in st:
-                tempCoef = int(st.replace("X^",""))
-                i = str.index(st)
+        self.a = self.b = self.c = float(0)
+        for k in range(0,len(self.str)):
+            if "X^" in self.str[k]:
+                tempCoef = int(self.str[k].replace("X^",""))
                 hpd = hpd if hpd > tempCoef else tempCoef
                 if (hpd > 2 or tempCoef < 0):
-                    break
-                elif ("*" in st  and i != 1):
-                    t = float(str[i - 2])
-                    t = (t * -1)if i > 2 and "-" in str[i - 3] else t
-                    t = (t * -1)if i > 2 and "=" in str[i - 4] else t
-                    t = (t * -1)if i > 2 and "=" in str[i - 3] else t
+                    print("The degree of this function is not within the range of 0 and 2")
+                    exit()
+                elif ("*" in self.str[k]  and k != 1):
+                    t = float(self.str[k - 2])
+                    t = (t * -1)if k > 2 and "-" in self.str[k - 3] else t
+                    t = (t * -1)if k > 2 and "=" in self.str[k - 4] else t
+                    t = (t * -1)if k > 2 and "=" in self.str[k - 3] else t
                     if tempCoef == 0:
-                        Func.c += t
+                        self.c += t
                     elif tempCoef == 1:
-                        Func.b += t    
+                        self.b += t    
                     elif tempCoef == 2:
-                        Func.a += t
+                        self.a += t
     
     def sqrt(self, x):
         if (x == 0 or x == 1):
@@ -36,15 +36,18 @@ class Func:
         return i
 
     def solve(self):
-        Func.sol1 = Func.sol2 = 0
-        if (Func.a != 0 ):
-            sq = (Func.b * Func.b) - 4*Func.a*Func.c
-            Func.discriminant =  False if (sq < 0) else True
-            if (Func.discriminant == True):
-                Func.sol1 = (-(Func.b) + Func.sqrt(self, sq))/ (2 * Func.a)
-                Func.sol2 = (-(Func.b) - Func.sqrt(self, sq))/ (2 * Func.a)
-            elif (Func.b != 0):
-                Func.sol1 = -1 * (Func.c / Func.b)
+        self.sol1 = self.sol2 = 0
+        if (self.a != 0 ):
+            sq = (self.b * self.b) - 4*self.a*self.c
+            self.discriminant =  False if (sq < 0) else True
+            if (self.discriminant == True):
+                self.sol1 = (-(self.b) + self.sqrt(sq))/ (2 * self.a)
+                self.sol2 = (-(self.b) - self.sqrt(sq))/ (2 * self.a)
+            elif (self.b != 0):
+                self.sol1 = -1 * (self.c / self.b)
+    
+    def FunctionCall(self, val):
+        return self.a * val * val + self.b * val + self.c
 
 class Matrices:
 
@@ -52,7 +55,54 @@ class Matrices:
     matrix = []
 
     def __init__ (self, inpString):
+        self.matrix.append([])
         self.strSplit = inpString.split(" ")
         self.strSplit = self.strSplit[2]
-        
+        self.strSplit = self.strSplit.split[";"]
+        self.columns = len(self.strSplit)
+        self.rows = len(self.strSplit[0].split(","))
+        for i in range (0, len(self.strSplit)):
+            self.strSplit[i] =self.strSplit[i].replace("[", "")
+            self.strSplit[i] =self.strSplit[i].replace("]", "")
+            temp =self.strSplit[i].split(",")
+            if (len(temp) != self.rows):
+                print ("Error, the number or rows is not equivalent for each column ")
+                exit()
+            for k in range (0, len(temp)):
+                self.matrix[i][k] = int(temp[k])
+
+    def add(self, matrix2):
+        result = []
+        result.append([])
+        if (self.columns != matrix2.columns):
+            print("The matrices cannot be added as the sizes don't match")
+            exit()
+        for i in range(0, self.columns):
+            for j in range(0, self.rows):
+                result[i][j] = self.matrix[i][j] + matrix2.matrix[i][j]
+        return result
+
+    def subtract(self, matrix2):
+        result = []
+        result.append([])
+        if (self.columns != matrix2.columns):
+            print("The matrices cannot be added as the sizes don't match")
+            exit()
+        for i in range(0, self.columns):
+            for j in range(0, self.rows):
+                result[i][j] = self.matrix[i][j] - matrix2.matrix[i][j]
+        return result
+
+    def multiply(self, matrix2):
+        result = []
+        result.append([])
+        if (self.columns != matrix2.rows):
+            print("The columns are not equivalent to the rows of the other matrix")
+            exit()
+        for i in range (0, self.rows):
+            for j in range (0, matrix2.columns):
+                result[i][j] = 0
+                for k in range (0, self.columns):
+                    result += (self.matrix[i][k] * matrix2.matrix[k][j])
+        return result 
         
