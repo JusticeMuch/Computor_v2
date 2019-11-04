@@ -54,22 +54,25 @@ class Matrices:
     columns = rows = 0
     matrix = []
 
-    def __init__ (self, inpString):
+    def __init__ (self, inp):
         self.matrix.append([])
-        self.strSplit = inpString.split(" ")
-        self.strSplit = self.strSplit[2]
-        self.strSplit = self.strSplit.split[";"]
-        self.columns = len(self.strSplit)
-        self.rows = len(self.strSplit[0].split(","))
-        for i in range (0, len(self.strSplit)):
-            self.strSplit[i] =self.strSplit[i].replace("[", "")
-            self.strSplit[i] =self.strSplit[i].replace("]", "")
-            temp =self.strSplit[i].split(",")
-            if (len(temp) != self.rows):
-                print ("Error, the number or rows is not equivalent for each column ")
-                exit()
-            for k in range (0, len(temp)):
-                self.matrix[i][k] = int(temp[k])
+        if type(inp) is list:
+            self.matrix = inp
+        else:
+            self.strSplit = inp.split(" ")
+            self.strSplit = self.strSplit[2]
+            self.strSplit = self.strSplit.split[";"]
+            self.columns = len(self.strSplit)
+            self.rows = len(self.strSplit[0].split(","))
+            for i in range (0, len(self.strSplit)):
+                self.strSplit[i] =self.strSplit[i].replace("[", "")
+                self.strSplit[i] =self.strSplit[i].replace("]", "")
+                temp =self.strSplit[i].split(",")
+                if (len(temp) != self.rows):
+                    print ("Error, the number or rows is not equivalent for each column ")
+                    exit()
+                for k in range (0, len(temp)):
+                    self.matrix[i][k] = int(temp[k])
 
     def add(self, matrix2):
         result = []
@@ -80,7 +83,7 @@ class Matrices:
         for i in range(0, self.columns):
             for j in range(0, self.rows):
                 result[i][j] = self.matrix[i][j] + matrix2.matrix[i][j]
-        return result
+        return Matrices(result)
 
     def subtract(self, matrix2):
         result = []
@@ -91,7 +94,7 @@ class Matrices:
         for i in range(0, self.columns):
             for j in range(0, self.rows):
                 result[i][j] = self.matrix[i][j] - matrix2.matrix[i][j]
-        return result
+        return Matrices(result)
 
     def multiply(self, matrix2):
         result = []
@@ -104,5 +107,30 @@ class Matrices:
                 result[i][j] = 0
                 for k in range (0, self.columns):
                     result += (self.matrix[i][k] * matrix2.matrix[k][j])
-        return result 
-        
+        return Matrices(result) 
+
+class ComplexNumbers:
+
+    imag = real = 0
+
+    # def __init__(self, inpStr):
+    #     self.strSplit = inpStr.split(" ")
+    #     self.imag = int(self.strSplit[2].replace("i", "")) if "i" in self.strSplit[2] else int(self.strSplit[4].replace("i", ""))
+    #     self.real = int(self.strSplit[2]) if "i" not in self.strSplit[2] else int(self.strSplit[4])
+
+    def __init__(self, real = 0, imag = 0):
+        self.real = real
+        self.imag = imag
+
+    def multply(self,compNum2):
+        real = (self.real * compNum2.real) + (-1)*(self.imag * compNum2.imag)
+        imag = (self.real * compNum2.imag) + (compNum2.real * self.imag)
+        return ComplexNumbers(real, imag)
+
+    def add (self, compNum2):
+        return ComplexNumbers(self.real + compNum2.real , self.imag + compNum2.imag)
+
+    def subtract (self, compNum2):
+        return ComplexNumbers(self.real + compNum2.real , self.imag + compNum2.imag)
+
+    
